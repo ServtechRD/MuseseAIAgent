@@ -41,6 +41,13 @@ from dotenv import load_dotenv, find_dotenv
 
 _ = load_dotenv(find_dotenv())  # read local .env file
 
+dir = "./docs"
+
+files = glob.glob(dir + "/*.*")
+
+for file in files:
+    print(file)
+
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('ChannelSecret', None)
 channel_access_token = os.getenv('ChannelAccessToken', None)
@@ -65,7 +72,17 @@ dir = "./docs"
 files = glob.glob(dir + "/*.*")
 
 for file in files:
-    naval_chat_bot.add(file)
+    try:
+        print(file)
+        filename, ext = os.path.split(file)
+        if (ext == '.pdf'):
+            naval_chat_bot.add(file, data_type='pdf_file')
+        elif (ext == '.txt'):
+            naval_chat_bot.add(file, data_type='text')
+        elif (ext == '.docx'):
+            naval_chat_bot.add(file, data_type='docx')
+    except Exception as e:
+        print("Add KM Error reaseon : $e")
 
 # Add tools to the app
 naval_chat_bot.add(
