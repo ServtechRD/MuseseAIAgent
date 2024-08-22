@@ -18,13 +18,13 @@ It uses the embedchain library to handle incoming messages and generate appropri
 
 import os
 import sys
+import glob
 
 import aiohttp
 
 from fastapi import Request, FastAPI, HTTPException
 
 from embedchain import App
-
 
 from linebot import (
     AsyncLineBotApi, WebhookParser
@@ -38,6 +38,7 @@ from linebot.models import (
 )
 
 from dotenv import load_dotenv, find_dotenv
+
 _ = load_dotenv(find_dotenv())  # read local .env file
 
 # get channel_secret and channel_access_token from your environment variable
@@ -58,6 +59,13 @@ parser = WebhookParser(channel_secret)
 
 # Embedchain App
 naval_chat_bot = App()
+
+dir = "./docs"
+
+files = glob.glob(dir + "/*.*")
+
+for file in files:
+    naval_chat_bot.add(file)
 
 # Add tools to the app
 naval_chat_bot.add(
