@@ -1,0 +1,35 @@
+llm:
+  provider: openai
+  config:
+    model: 'gpt-3.5-turbo'
+    temperature: 0.5
+    max_tokens: 4096
+    top_p: 1
+    api_version: 2024-02-01
+
+vectordb:
+  provider: chroma
+  config:
+    collection_name: 'full-stack-app'
+    dir: db
+    allow_reset: true
+
+embedder:
+  provider: openai
+  config:
+    model: 'ext-embedding-3-small'
+
+
+chunker:
+  chunk_size: 2000
+  chunk_overlap: 100
+  length_function: 'len'
+  min_chunk_size: 0
+
+cache:
+  similarity_evaluation:
+    strategy: distance
+    max_distance: 1.0
+  config:
+    similarity_threshold: 0.8
+    auto_flush: 50

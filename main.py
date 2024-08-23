@@ -25,6 +25,7 @@ import aiohttp
 from fastapi import Request, FastAPI, HTTPException
 
 from embedchain import App
+from embedchain.store.assistants import AIAssistant
 
 from linebot import (
     AsyncLineBotApi, WebhookParser
@@ -58,7 +59,8 @@ line_bot_api = AsyncLineBotApi(channel_access_token, async_http_client)
 parser = WebhookParser(channel_secret)
 
 # Embedchain App
-naval_chat_bot = App()
+naval_chat_bot = App.from_config(yaml_path="config.yaml")
+
 
 dir = "./docs"
 
@@ -90,6 +92,30 @@ naval_chat_bot.add(
 
 naval_chat_bot.add(
     "web_page", "https://tw.linebiz.com/column/LAP-Maximize-OA-Strategy/")
+
+
+@app.get("/test")
+async def handle_test(mode, message):
+    # get request body as text
+
+    print(message)
+    print(mode)
+
+    result = ""
+
+    if mode == "0":
+        result = naval_chat_bot.chat(
+            message + " reply in zh-tw, result")
+    elif mode == "1":
+        result = naval_chat_bot.query(
+            message + " reply in zh-tw, result", citations=False)
+    else:
+        result = naval_chat_bot.chat(
+            message + " reply in zh-tw, result", citations=True)
+
+    print(result)
+
+    return result
 
 
 @app.post("/callback")

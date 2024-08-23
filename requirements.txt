@@ -1,8 +1,8 @@
 line-bot-sdk==3.5.0
 fastapi
 uvicorn[standard]
-langchain==0.0.303
-embedchain==0.0.92
-openai==0.28.1
+langchain==0.2.14
+embedchain==0.1.121
+openai==1.42.0
 pydantic>=2.0.3,<3
 embedchain[dataloaders]
