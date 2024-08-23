@@ -95,6 +95,7 @@ naval_chat_bot.add(
     "web_page", "https://tw.linebiz.com/column/LAP-Maximize-OA-Strategy/")
 '''
 
+'''
 @app.get("/test")
 async def handle_test(mode, message):
     # get request body as text
@@ -117,7 +118,7 @@ async def handle_test(mode, message):
     print(result)
 
     return result
-
+'''
 
 @app.post("/callback")
 async def handle_callback(request: Request):
