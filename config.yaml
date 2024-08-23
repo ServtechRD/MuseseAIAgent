@@ -3,7 +3,7 @@ llm:
   config:
     model: 'gpt-3.5-turbo'
     temperature: 0.5
-    max_tokens: 4096
+    max_tokens: 2048
     top_p: 1
     api_version: 2024-02-01
 
@@ -17,7 +17,7 @@ vectordb:
 embedder:
   provider: openai
   config:
-    model: 'ext-embedding-3-small'
+    model: 'text-embedding-ada-002'
 
 
 chunker:
