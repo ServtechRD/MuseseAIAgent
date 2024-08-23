@@ -84,6 +84,7 @@ for file in files:
         print("Add KM Error reaseon : $e")
 
 # Add tools to the app
+'''
 naval_chat_bot.add(
     "web_page", "https://tw.linebiz.com/column/LINEOA-2023-Price-Plan/")
 
@@ -92,7 +93,7 @@ naval_chat_bot.add(
 
 naval_chat_bot.add(
     "web_page", "https://tw.linebiz.com/column/LAP-Maximize-OA-Strategy/")
-
+'''
 
 @app.get("/test")
 async def handle_test(mode, message):
