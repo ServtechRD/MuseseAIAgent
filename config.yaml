@@ -3,9 +3,11 @@ llm:
   config:
     model: 'gpt-3.5-turbo'
     temperature: 0.5
-    max_tokens: 2048
+    max_tokens: 4096
     top_p: 1
     api_version: 2024-02-01
+    system_prompt: |
+      Act as Customer Service. Answer the following questions in the style of Assistance.
 
 vectordb:
   provider: chroma
