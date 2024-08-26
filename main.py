@@ -174,8 +174,8 @@ async def handle_callback(request: Request):
         user = uid
         try:
             profile = await line_bot_api.get_profile(uid)
-            user = profile.displayName
-        except LineBotApiError as e:
+            user = profile.display_name
+        except Exception as e:
             logger.error(e)
 
         time_text = datetime.now().isoformat()
