@@ -169,8 +169,8 @@ async def handle_callback(request: Request):
         tool_result = naval_chat_bot.query(
             event.message.text + " reply in zh-tw, result")
 
-        print(event.source)
-        uid = event.source["userId"]
+        print(event.source.userId)
+        uid = event.source
         user = uid
         try:
             profile = line_bot_api.get_profile(uid)
