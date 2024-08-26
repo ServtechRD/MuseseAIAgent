@@ -20,6 +20,8 @@ import os
 import sys
 import glob
 
+import loguru
+
 import aiohttp
 
 from fastapi import Request, FastAPI, HTTPException
@@ -40,6 +42,10 @@ from linebot.models import (
 
 from dotenv import load_dotenv, find_dotenv
 
+from datetime import datetime, timezone, timedelta
+
+from loguru import logger
+
 _ = load_dotenv(find_dotenv())  # read local .env file
 
 # get channel_secret and channel_access_token from your environment variable
@@ -52,6 +58,34 @@ if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
+
+def reloadKM():
+    dir = "./docs"
+
+    files = glob.glob(dir + "/*.*")
+
+    for file in files:
+        try:
+            print("found :" + file)
+            ext = file[-4:]
+            print("ext = " + ext)
+            if (ext == '.pdf'):
+                print("is pdf file")
+                naval_chat_bot.add(file, data_type='pdf_file')
+            elif (ext == '.txt'):
+                print("is text file")
+                naval_chat_bot.add(file, data_type='text')
+            elif (ext == '.docx'):
+                print("is docx file")
+                naval_chat_bot.add(file, data_type='docx')
+        except Exception as e:
+            print("Add KM Error reaseon : $e")
+
+
+if not os.path.exists("./log"):
+    os.makedirs("./log")
+logger.add("./logs/linebot.log", rotation="12:00", retention="14 days", compression="zip")
+
 app = FastAPI()
 session = aiohttp.ClientSession()
 async_http_client = AiohttpAsyncHttpClient(session)
@@ -61,27 +95,7 @@ parser = WebhookParser(channel_secret)
 # Embedchain App
 naval_chat_bot = App.from_config(yaml_path="config.yaml")
 
-
-dir = "./docs"
-
-files = glob.glob(dir + "/*.*")
-
-for file in files:
-    try:
-        print("found :" + file)
-        ext = file[-4:]
-        print("ext = " + ext)
-        if (ext == '.pdf'):
-            print("is pdf file")
-            naval_chat_bot.add(file, data_type='pdf_file')
-        elif (ext == '.txt'):
-            print("is text file")
-            naval_chat_bot.add(file, data_type='text')
-        elif (ext == '.docx'):
-            print("is docx file")
-            naval_chat_bot.add(file, data_type='docx')
-    except Exception as e:
-        print("Add KM Error reaseon : $e")
+reloadKM()
 
 # Add tools to the app
 '''
@@ -154,6 +168,20 @@ async def handle_callback(request: Request):
 
         tool_result = naval_chat_bot.query(
             event.message.text + " reply in zh-tw, result")
+
+        uid = event.source.userId
+        user = uid
+        try:
+            profile = line_bot_api.get_profile(uid)
+            user = profile.displayName
+        except LineBotApiError as e:
+            logger.error(e)
+
+        time_text = datetime.now().isoformat()
+
+        output_text = time_text + "|" + uid + "|" + user + "|" + event.message.text + "|" + tool_result
+
+        logger.info(output_text)
 
         await line_bot_api.reply_message(
             event.reply_token,
