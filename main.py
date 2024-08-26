@@ -169,6 +169,7 @@ async def handle_callback(request: Request):
         tool_result = naval_chat_bot.query(
             event.message.text + " reply in zh-tw, result")
 
+        print(event)
         uid = event.source.userId
         user = uid
         try:
