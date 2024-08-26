@@ -170,7 +170,7 @@ async def handle_callback(request: Request):
             event.message.text + " reply in zh-tw, result")
 
         print(event.source)
-        uid = event.source.userId
+        uid = event.source["userId"]
         user = uid
         try:
             profile = line_bot_api.get_profile(uid)
