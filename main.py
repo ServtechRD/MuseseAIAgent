@@ -173,7 +173,7 @@ async def handle_callback(request: Request):
         uid = event.source.user_id
         user = uid
         try:
-            profile = line_bot_api.get_profile(uid)
+            profile = await line_bot_api.get_profile(uid)
             user = profile.displayName
         except LineBotApiError as e:
             logger.error(e)
