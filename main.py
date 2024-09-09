@@ -256,10 +256,13 @@ async def handle_callback(request: Request):
         # 修剪上下文以保持在最大长度内
         conversation_history = trim_context(conversation_history)
 
-        tool_result = naval_chat_bot.query(
-            user_input + " reply in zh-tw, result")
+        tool_result,sources = naval_chat_bot.query(
+            user_input + " reply in zh-tw, result",citations=True)
 
         found_data = True
+
+        for source in sources :
+            logger.debug(source)
 
         if not tool_result:
             found_data = False
