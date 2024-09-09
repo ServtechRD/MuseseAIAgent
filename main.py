@@ -109,8 +109,8 @@ reloadKM()
 async def main_page():
     files = glob.glob("./docs/*.*")
     files_list_html = "".join([
-                                  f"<li>{os.path.basename(file)} <form style='display:inline;' method='post' action='/delete/'><input type='hidden' name='filename' value='{os.path.basename(file)}'><input type='submit' value='删除'></form></li>"
-                                  for file in files])
+        f"<li>{os.path.basename(file)} <form style='display:inline;' method='post' action='/delete/'><input type='hidden' name='filename' value='{os.path.basename(file)}'><input type='submit' value='删除'></form></li>"
+        for file in files])
 
     html_content = f"""
     <html>
@@ -259,13 +259,16 @@ async def handle_callback(request: Request):
         tool_result = naval_chat_bot.query(
             user_input + " reply in zh-tw, result")
 
+        found_data = True
+
         if not tool_result:
+            found_data = False
             # 如果没有找到相关文档，使用GPT-3.5提供答案
             combined_prompt = f"{conversation_history}\n\nAssistant:"
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "你是一位乐于助人的助手。"},
+                    {"role": "system", "content": "You are an assistant"},
                     {"role": "user", "content": combined_prompt},
                 ]
             )
@@ -282,7 +285,8 @@ async def handle_callback(request: Request):
 
         time_text = datetime.now().isoformat()
 
-        output_text = time_text + "|" + uid + "|" + user + "|" + event.message.text + "|" + tool_result
+        output_text = time_text + "|" + uid + "|" + user + "|" + event.message.text + "|" + tool_result + "|" + str(
+            found_data)
 
         logger.info(output_text)
 
